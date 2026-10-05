@@ -2,7 +2,8 @@
 type: plan
 description: Port gdp-ts to a reusable Rust core with Python support and publish it privately.
 verified_at: 2026-10-05
-status: IN_PROGRESS
+status: DONE
+commit: c6ecae24d30b35be3bac6148fa6e52550edfef93
 ---
 # Port GDP
 
@@ -165,3 +166,12 @@ and privately upload supersedes an additional plan approval step.
 
 The skill uses bundled Python, adapter, and guarantee references. No helper script
 or generated template assets are needed; deterministic enforcement is gdp-lint.
+
+## Completion evidence
+
+Code revision c6ecae24d30b35be3bac6148fa6e52550edfef93 is uploaded to the private
+cloudthinker-ai/gdp repository. GitHub Actions run 37342180432 completed successfully:
+all four Python 3.11–3.14 jobs ran Rust contracts, 33 Python tests, packaging, and
+clean-wheel tests; the advisory audit passed. Direct installation from that private
+revision ran the real protected SQLite example. Additional Rust and Python consumers
+followed the adoption skill successfully. See docs/verification.md.
