@@ -1,0 +1,11 @@
+[package]
+name = "gdp"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Value-bound proof contracts with typed Rust and language-independent runtime handles"
+
+[lints]
+workspace = true

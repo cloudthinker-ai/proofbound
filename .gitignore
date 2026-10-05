@@ -1,0 +1,13 @@
+/target/
+/.venv/
+/.test-venv/
+/.test-*/
+.mypy_cache/
+/dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.so
+*.pyd
+*.egg-info/

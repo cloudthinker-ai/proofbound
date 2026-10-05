@@ -1,0 +1,8 @@
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+allow-unwrap-in-tests = true
+disallowed-methods = [
+    { path = "std::boxed::Box::leak", reason = "a leaked allocation hides an ownership bug; own the value or borrow it" },
+    { path = "std::string::String::leak", reason = "a leaked allocation hides an ownership bug; own the value or borrow it" },
+    { path = "std::vec::Vec::leak", reason = "a leaked allocation hides an ownership bug; own the value or borrow it" },
+]

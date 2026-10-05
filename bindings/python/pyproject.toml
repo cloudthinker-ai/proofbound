@@ -1,0 +1,29 @@
+[build-system]
+requires = ["maturin>=1.14,<2"]
+build-backend = "maturin"
+
+[project]
+name = "gdp-rs"
+version = "0.1.0"
+description = "Rust-backed proof contracts for Python authorization boundaries"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+
+[project.scripts]
+gdp-lint = "gdp.lint:main"
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10", "ruff>=0.11,<1", "mypy>=1.15,<2"]
+
+[tool.maturin]
+bindings = "pyo3"
+python-source = "python"
+module-name = "gdp._gdp"
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
