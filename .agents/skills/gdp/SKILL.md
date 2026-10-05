@@ -12,8 +12,8 @@ reach a sensitive operation for the exact values that were checked.
 2. In Python, create one private module-level issuer per fact in `proofs/`.
    Include its `__init__.py` package marker for imports and strict type checks.
    Export a typed checking function and the issuer's read-only verifier, never the
-   issuer. In Rust, keep the issuer private in the policy module and export a
-   verifier plus a checking function.
+   issuer. In Rust, keep the issuer in a private policy field and export its
+   original verifier plus a checking function; marker types alone do not protect issuance.
 3. Perform the actual database or policy-engine check before minting a proof.
    Returning `None` is a denial; do not mint proof from a boolean supplied by a caller.
 4. Make the sensitive Python function require typed proof arguments and add
@@ -25,9 +25,12 @@ reach a sensitive operation for the exact values that were checked.
    resources, same-label foreign issuers, and scope escape cannot cause a write.
 7. Run the type checker and `gdp-lint` on Python consumer code. Keep policy modules
    small enough to review. Never cast, serialize, or recreate an authority handle.
+   For Rust run cargo check, cargo test, and Clippy; compile real wrong-subject,
+   missing-proof, and escaping-name fixtures and confirm contract diagnostics.
 
 Before editing Python read [references/python.md](references/python.md); for a Rust
-consumer or new adapter read [references/adapters.md](references/adapters.md).
+consumer read [references/rust.md](references/rust.md). For a new adapter read
+[references/adapters.md](references/adapters.md).
 Read [references/guarantees.md](references/guarantees.md) before claiming safety.
 Proofs describe check-time facts;
 revocation, mutable values, and check/write races still need application transactions.

@@ -7,10 +7,16 @@ enum Plan {}
 #[test]
 fn typed_contract_accepts_exact_subjects_and_independent_facts() {
     let admin = define_proof::<Admin>("Admin").unwrap();
+    let impostor = define_proof::<Admin>("Admin").unwrap();
     let plan = define_proof::<Plan>("Plan").unwrap();
     let result = name2("user", "project", |user, project| {
         let admin_proof = admin.prove((&user, &project)).unwrap();
         let plan_proof = plan.prove(&project).unwrap();
+        let foreign_proof = impostor.prove((&user, &project)).unwrap();
+        assert_eq!(
+            admin.verifier().require(&foreign_proof, (&user, &project)),
+            Err(ProofError::WrongKind)
+        );
         admin
             .verifier()
             .require(&admin_proof, (&user, &project))

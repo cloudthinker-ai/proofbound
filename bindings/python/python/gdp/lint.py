@@ -31,6 +31,9 @@ class _Checker(ast.NodeVisitor):
             if isinstance(node, ast.ImportFrom) and node.module in ("gdp", "gdp._gdp"):
                 for alias in node.names:
                     self.aliases[alias.asname or alias.name] = f"gdp.{alias.name}"
+            elif isinstance(node, ast.ImportFrom) and node.module == "typing":
+                for alias in node.names:
+                    self.aliases[alias.asname or alias.name] = f"typing.{alias.name}"
             elif isinstance(node, ast.Import):
                 for alias in node.names:
                     if alias.name in ("gdp", "gdp._gdp"):
@@ -54,7 +57,10 @@ class _Checker(ast.NodeVisitor):
         if isinstance(node, ast.Name):
             return self.aliases.get(node.id, node.id)
         if isinstance(node, ast.Attribute):
-            return f"{self._resolve(node.value)}.{node.attr}"
+            name = f"{self._resolve(node.value)}.{node.attr}"
+            return "gdp" if name == "gdp._gdp" else name
+        if isinstance(node, ast.Subscript):
+            return self._resolve(node.value)
         return ""
 
     def _report(self, node: ast.AST, code: str, message: str) -> None:

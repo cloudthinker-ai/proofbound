@@ -12,10 +12,17 @@ from gdp.lint import check_file
         ("from gdp import define_proof as make\n_issuer = make('Admin')\n", {"GDP001"}),
         ("import gdp as g\n_issuer = g.define_proof('Admin')\n", {"GDP001"}),
         ("import gdp._gdp as core\n_issuer = core.define_proof('Admin')\n", {"GDP001"}),
+        ("import gdp._gdp\n_issuer = gdp._gdp.define_proof('Admin')\n", {"GDP001"}),
         ("from gdp import Proof\nproof = Proof()\n", {"GDP004"}),
+        ("from gdp import Proof\nproof = Proof[str]()\n", {"GDP004"}),
         ("proof = issuer.prove(user, project)\n", {"GDP003"}),
         (
             "from gdp import Proof as P\nfrom typing import cast\nx = cast(P, {})\n",
+            {"GDP005"},
+        ),
+        (
+            "from gdp import Proof as P\nfrom typing import cast as convert\n"
+            "x = convert(P[str], {})\n",
             {"GDP005"},
         ),
         ("from proofs.admin import _issuer\n", {"GDP006"}),
