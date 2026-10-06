@@ -1,9 +1,9 @@
 # Verification
 
 The initial port was verified locally on 2026-10-05 with Rust 1.90.0 and CPython
-3.12. The independent repository is private at https://github.com/cloudthinker-ai/gdp.
+3.12. The independent repository is private at https://github.com/cloudthinker-ai/proofbound.
 Code revision `c6ecae24d30b35be3bac6148fa6e52550edfef93` passed all five jobs in
-[run 37342180432](https://github.com/cloudthinker-ai/gdp/actions/runs/37342180432).
+[run 37342180432](https://github.com/cloudthinker-ai/proofbound/actions/runs/37342180432).
 
 | Check | Evidence |
 | --- | --- |
@@ -20,7 +20,7 @@ Code revision `c6ecae24d30b35be3bac6148fa6e52550edfef93` passed all five jobs in
 
 The CI workflow repeats the current full suite, builds from the source distribution,
 and tests a fresh wheel installation on Python 3.11, 3.12, 3.13, and 3.14. See
-[GitHub Actions](https://github.com/cloudthinker-ai/gdp/actions) for the commit-specific
+[GitHub Actions](https://github.com/cloudthinker-ai/proofbound/actions) for the commit-specific
 results and private wheel artifacts.
 
 This verifies the library boundary, not an application migration. The port introduces

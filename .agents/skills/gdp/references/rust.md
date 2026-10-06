@@ -5,7 +5,7 @@ credential helper, or use a path to the core in a local checkout:
 
 ```toml
 [dependencies]
-gdp = { git = "https://github.com/cloudthinker-ai/gdp", package = "gdp" }
+gdp = { git = "https://github.com/cloudthinker-ai/proofbound", package = "gdp" }
 ```
 
 The core has no dependencies on Python. Keep a private issuer field in the policy

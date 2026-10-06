@@ -1,4 +1,4 @@
-# GDP
+# Proofbound
 
 Rust proof contracts with language adapters; Python is the first adapter.
 

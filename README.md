@@ -1,8 +1,11 @@
-# GDP — Ghosts of Departed Proofs
+# Proofbound
 
 Sensitive functions require evidence that checks succeeded for their exact arguments.
 This is a Rust rewrite of [gdp-ts](https://github.com/rauchg/gdp-ts), with a dependency-free
 core and Python as the first language binding.
+
+The repository is named Proofbound. The Rust crate `gdp`, Python distribution
+`gdp-rs`, import package `gdp`, and command `gdp-lint` retain their existing names.
 
 | Consumer | Enforcement |
 | --- | --- |
@@ -25,7 +28,7 @@ make install
 Install directly from the private repository using an authenticated Git credential helper:
 
 ```bash
-uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/gdp.git#subdirectory=bindings/python'
+uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/proofbound.git#subdirectory=bindings/python'
 ```
 
 Source installs require Rust. `make wheel` builds an abi3 wheel for the current platform
@@ -91,7 +94,7 @@ Depend on the core without pulling in Python:
 
 ```toml
 [dependencies]
-gdp = { git = "https://github.com/cloudthinker-ai/gdp", package = "gdp" }
+gdp = { git = "https://github.com/cloudthinker-ai/proofbound", package = "gdp" }
 ```
 
 ```rust
