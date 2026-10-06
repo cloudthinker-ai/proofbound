@@ -25,16 +25,24 @@ make install
 .venv/bin/python examples/python/main.py
 ```
 
-Install directly from the private repository using an authenticated Git credential helper:
+The first release is being prepared as `gdp-rs` version `0.1.0`. After it is
+published, install with:
+
+```bash
+uv pip install gdp-rs==0.1.0
+```
+
+The API is experimental. See [the release notes](docs/releases/0.1.0.md) and
+[guarantees](docs/guarantees.md) before adopting it. Source installation is also available:
 
 ```bash
 uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/proofbound.git#subdirectory=bindings/python'
 ```
 
 Source installs require Rust. `make wheel` builds an abi3 wheel for the current platform
-that installs without a Rust toolchain. No package has been published to PyPI.
+that installs without a Rust toolchain.
 
-Private CI also builds tested wheels for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
+CI also builds tested wheels for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
 (11+), and Windows x64. Download the artifact for your platform from a successful
 [Actions run](https://github.com/cloudthinker-ai/proofbound/actions), then install
 its wheel. For example, on Linux x64, using the run ID of the commit you want:
@@ -45,7 +53,7 @@ gh run download RUN_ID --repo cloudthinker-ai/proofbound \
 uv pip install wheels/*.whl
 ```
 
-The artifacts require access to the private repository. Each wheel uses CPython's
+Actions artifacts require access to the repository while it remains private. Each wheel uses CPython's
 3.11 stable ABI; CI checks Python 3.11–3.14. Use source installation for platforms
 outside the wheel matrix.
 
@@ -168,6 +176,10 @@ installed type hints, interface compatibility, and extension/stub agreement.
 They also cover cyclic garbage collection, mypy and Pyrefly consumers, and a
 FastAPI request lifecycle with real SQLite writes. CI exercises Python 3.11–3.14,
 builds the source distribution and platform wheels, and tests fresh wheel installations.
+
+Report vulnerabilities through the process in [SECURITY.md](SECURITY.md).
+Maintainers follow [the publication guide](docs/publishing.md) to prepare and
+verify release artifacts before upload.
 
 ## Performance
 

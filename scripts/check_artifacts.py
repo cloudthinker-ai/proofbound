@@ -1,6 +1,7 @@
 import tarfile
 import tomllib
 import zipfile
+from email.parser import Parser
 from pathlib import Path
 
 
@@ -17,6 +18,34 @@ def check_wheel(path: Path, expected: bytes) -> None:
         }
         if not required.issubset(archive.namelist()):
             raise ValueError("Missing Python typing or API contract")
+        metadata_paths = [
+            item for item in archive.namelist() if item.endswith("/METADATA")
+        ]
+        if len(metadata_paths) != 1:
+            raise ValueError("Expected one wheel metadata document")
+        metadata = Parser().parsestr(archive.read(metadata_paths[0]).decode())
+        project = tomllib.loads(
+            (
+                Path(__file__).resolve().parents[1] / "bindings/python/pyproject.toml"
+            ).read_text()
+        )["project"]
+        expected_headers = {
+            "Name": project["name"],
+            "Version": project["version"],
+            "Requires-Python": project["requires-python"],
+        }
+        if any(metadata.get(key) != value for key, value in expected_headers.items()):
+            raise ValueError("Wheel metadata does not match the release contract")
+        if (
+            metadata.get("Description-Content-Type", "").split(";", 1)[0].strip()
+            != "text/markdown"
+        ):
+            raise ValueError("Wheel description must use Markdown")
+        if not set(project["classifiers"]).issubset(metadata.get_all("Classifier", [])):
+            raise ValueError("Wheel is missing supported classifiers")
+        urls = dict(item.split(", ", 1) for item in metadata.get_all("Project-URL", []))
+        if any(urls.get(key) != value for key, value in project["urls"].items()):
+            raise ValueError("Wheel is missing release project URLs")
 
 
 def check() -> None:
@@ -24,6 +53,13 @@ def check() -> None:
     version = tomllib.loads((root / "Cargo.toml").read_text())["workspace"]["package"][
         "version"
     ]
+    if (
+        tomllib.loads((root / "bindings/python/pyproject.toml").read_text())["project"][
+            "version"
+        ]
+        != version
+    ):
+        raise ValueError("Rust and Python release versions differ")
     expected = (root / "LICENSE").read_bytes()
     archives = [
         root / f"target/package/gdp-{version}.crate",

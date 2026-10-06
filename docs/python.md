@@ -4,8 +4,9 @@ The distribution is `gdp-rs`; the import package is `gdp`. CPython 3.11 or newer
 supported. Wheels use abi3 and are specific to operating system and architecture.
 
 CI builds and tests wheels for Linux x64 and ARM64 (glibc 2.17 or newer), macOS
-11+ ARM64, and Windows x64. Download a wheel from a successful private Actions run
-as described in the repository README. Installing a wheel does not require Rust.
+11+ ARM64, and Windows x64. Install `gdp-rs==0.1.0` from PyPI after the first
+release is published, or use tested Actions artifacts as described in the
+repository README. Installing a wheel does not require Rust.
 
 ## Naming
 

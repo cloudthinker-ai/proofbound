@@ -27,3 +27,4 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - `examples/` exercises real permission checks and protected operations.
 - CI tests FastAPI request scopes and private wheels for Linux x64/ARM64, macOS ARM64 and Windows x64.
 - Benchmark scripts compare release packages and pinned upstream code; raw results live in `docs/audits/`.
+- Releases use tested platform artifacts; publication credentials enter only the upload process.
