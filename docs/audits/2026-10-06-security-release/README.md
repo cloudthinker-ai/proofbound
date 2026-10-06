@@ -24,6 +24,11 @@ permissions. Permission cases run unprivileged on POSIX; Windows/root skip only
 that permission-dependent case. Existing tests cover opaque handles, all proof
 rejection shapes, active scopes, FastAPI, type checking and installed packages.
 
+Further partial checks reproduced hidden async execution in a partial subclass
+and wrong-subject execution after rebinding a partial keyword. The same SQLite
+regression now rejects subclasses and checks that original keyword mutation
+cannot change protected default bindings.
+
 Before the patch, cargo-audit found no advisories among 16 Rust dependencies;
 OSV found no matching advisories among 27 installed Python distributions;
 Gitleaks found no secrets in all 16 commits. Repository settings were verified
