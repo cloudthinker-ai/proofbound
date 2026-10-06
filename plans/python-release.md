@@ -35,3 +35,11 @@ scan, archive checksum recording and an Infisical-backed upload dry run.
 No public upload, visibility change, crates.io publication or credential
 persistence is part of preparation. Ask for the final publication decision only
 after the candidate and artifacts are concrete and reviewable.
+
+## Cross-platform preparation check
+
+Candidate `1e6b6ec` passed all four wheel jobs. Comparing those wheels together
+found that Windows checkout changed the packaged license to CRLF: 1,093 bytes
+versus the original 1,072, with identical text after newline normalization.
+Set `eol=lf` for the three LICENSE paths through `.gitattributes`, then rebuild
+the candidate and require byte-identical original licenses on every platform.
