@@ -1,0 +1,29 @@
+name: Core comparison
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: rauchg/gdp-ts
+          ref: ebd0af9cae423997a43a024dc6d6738b0895bbec
+          path: .bench/upstream
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+      - run: cargo build --release --locked -p gdp --example bench_core
+      - run: python3 scripts/bench_core.py --upstream .bench/upstream --output .bench/results
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: proofbound-core-comparison
+          path: .bench/results
+          if-no-files-found: error

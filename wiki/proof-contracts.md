@@ -37,6 +37,11 @@ live subjects. The linter preserves diagnostics while building parent maps on
 demand and pruning excluded dependency directories. Release-build comparisons
 and their scope are described in [performance measurement](../docs/performance.md).
 
+The [Rust and gdp-ts comparison](../docs/core-performance.md) measures runtime
+overhead separately from TypeScript's compile-time guarantees. Reusing a phantom
+proof token and verifying opaque runtime identities perform different work;
+benchmark output parity does not imply equivalent guarantees.
+
 ## What Breaks
 
 A faulty trusted checker can issue a faulty proof. A stale fact can outlive a

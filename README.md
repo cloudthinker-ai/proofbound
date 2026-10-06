@@ -187,6 +187,9 @@ The benchmark checks output parity, alternates baseline/current measurements, an
 reports CPU and wall time with raw samples. See [performance measurement](docs/performance.md)
 for baseline snapshots, repeated comparisons, and the limits of local measurements.
 
+The [Rust versus gdp-ts benchmark](docs/core-performance.md) compares pinned
+runtime implementations, with their different guarantees stated explicitly.
+
 ## Attribution
 
 Based on Guillermo Rauch's MIT-licensed [gdp-ts](https://github.com/rauchg/gdp-ts),

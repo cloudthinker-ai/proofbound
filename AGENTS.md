@@ -26,4 +26,4 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - `bindings/python/` owns PyO3 classes, the Python API, lint command, and type declarations.
 - `examples/` exercises real permission checks and protected operations.
 - CI tests FastAPI request scopes and private wheels for Linux x64/ARM64, macOS ARM64 and Windows x64.
-- `scripts/bench_python.py` compares release packages; raw measurements live in `docs/audits/`.
+- Benchmark scripts compare release packages and pinned upstream code; raw results live in `docs/audits/`.
