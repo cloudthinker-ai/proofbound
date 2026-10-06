@@ -139,12 +139,13 @@ def test_callable_instances_are_rejected_before_deferred_side_effects(db):
             db.execute("UPDATE project SET password='forbidden'")
 
     decorator = requires(proof=Requirement(_admin.kind, ("project",)))
+    with pytest.raises(TypeError, match="Python functions"):
+        decorator(AsyncPartial(SyncOperation().__call__))
     for operation in (
         AsyncOperation(),
         GeneratorOperation(),
         AsyncGeneratorOperation(),
         SyncOperation(),
-        AsyncPartial(SyncOperation().__call__),
     ):
         for candidate in (operation, partial(operation)):
             with pytest.raises(TypeError, match="Python functions"):

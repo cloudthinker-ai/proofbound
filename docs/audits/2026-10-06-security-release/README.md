@@ -29,6 +29,12 @@ and wrong-subject execution after rebinding a partial keyword. The same SQLite
 regression now rejects subclasses and checks that original keyword mutation
 cannot change protected default bindings.
 
+Cross-platform CI caught a regression-test assumption on Python 3.13: its
+built-in partial constructor flattens a partial subclass into the underlying
+function before GDP sees it, while older versions retain the subclass as a
+call target. The test now checks the actual subclass directly on every version,
+alongside ordinary callable-instance partials. No runtime guard was relaxed.
+
 Before the patch, cargo-audit found no advisories among 16 Rust dependencies;
 OSV found no matching advisories among 27 installed Python distributions;
 Gitleaks found no secrets in all 16 commits. Repository settings were verified
