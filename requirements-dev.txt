@@ -1,4 +1,4 @@
-maturin==1.14.1
+maturin==1.15.0
 pytest==9.1.1
 mypy==1.20.2
 ruff==0.16.10
