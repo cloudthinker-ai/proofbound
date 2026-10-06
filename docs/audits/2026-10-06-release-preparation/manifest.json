@@ -1,0 +1,33 @@
+{
+  "candidate_commit": "2c9f2c25dcdecfd4e15eb65f3c81da16a9509247",
+  "ci_run": "https://github.com/cloudthinker-ai/proofbound/actions/runs/37437554808",
+  "distribution": "gdp-rs",
+  "version": "0.1.0",
+  "files": [
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-macosx_11_0_arm64.whl",
+      "sha256": "84826359bfb2ea4573bd207f5a33d32673fb8d879712981d44f7d2defde49ce8",
+      "size_bytes": 234066
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "0136118d23a399067fdf98f12d5a1d321c140c7635b666a2a913ed0b6073a689",
+      "size_bytes": 259680
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "sha256": "d0855d1c0424c64d9c9db2e67bf20ac9b50b39b10b46f950c7f9f27bf798a3a5",
+      "size_bytes": 259822
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-win_amd64.whl",
+      "sha256": "249a7f3f8e3649b5ae57d6ab9103b6aad82a9b80c5b9683a5c50e13ba0574e6e",
+      "size_bytes": 139723
+    },
+    {
+      "filename": "gdp_rs-0.1.0.tar.gz",
+      "sha256": "6ccf3e770f0f81c12155409b9723b9b5355e1d62b81820c7eff05ab3108ee47d",
+      "size_bytes": 25551
+    }
+  ]
+}
