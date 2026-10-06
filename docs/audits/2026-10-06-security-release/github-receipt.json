@@ -1,0 +1,44 @@
+{
+  "url": "https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.1",
+  "tag": "v0.1.1",
+  "target": "289170fe6914118702a9c9671a7ae3e9bb981bf0",
+  "draft": false,
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "gdp_rs-0.1.1-cp311-abi3-macosx_11_0_arm64.whl",
+      "bytes": 234359,
+      "digest": "sha256:5c0fb9fce717bcb3d5ab625956f4bbeb380ef89bfc1b16e93735544a093970cb"
+    },
+    {
+      "name": "gdp_rs-0.1.1-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "bytes": 259966,
+      "digest": "sha256:d57dd3985284f02df93fba405105cbd14742d302c63dabe0f7cc4d900423fec2"
+    },
+    {
+      "name": "gdp_rs-0.1.1-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 260056,
+      "digest": "sha256:fa56966c167d299d95940c35bc90e59a6580cf48ef5d1118a4c86c850d574d93"
+    },
+    {
+      "name": "gdp_rs-0.1.1-cp311-abi3-win_amd64.whl",
+      "bytes": 139975,
+      "digest": "sha256:b2d2371ffd5d96291ad86a549d27c364f2c50ff3f12dcfab67ef7b96c0780a28"
+    },
+    {
+      "name": "gdp_rs-0.1.1.tar.gz",
+      "bytes": 26460,
+      "digest": "sha256:05d6e8f40310c2e81d18262bc863a3d9e5e42d1dbb078714bf78d8491aee2f5d"
+    },
+    {
+      "name": "manifest.json",
+      "bytes": 1975,
+      "digest": "sha256:6118bd96c812e57be9a7e4f2402a59ce8f8fa5587a741bef77cd8d99d10e9428"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 578,
+      "digest": "sha256:228e03f85c4815b7b45cfd61b968ff0ef9fef5fd47e0d79fb5da29ab71d4e8c1"
+    }
+  ]
+}

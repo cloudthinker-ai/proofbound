@@ -2,6 +2,7 @@ name: Proof contracts
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:
