@@ -74,7 +74,7 @@ jobs:
           target: ${{ matrix.target }}
           manylinux: ${{ matrix.manylinux }}
           rust-toolchain: "1.90.0"
-          maturin-version: "1.14.1"
+          maturin-version: "1.15.0"
           args: --release --locked --manifest-path bindings/python/Cargo.toml --out dist
       - run: python scripts/test_wheel.py --platform ${{ matrix.platform }}
       - run: uv run --no-project --python 3.12 python scripts/test_wheel.py --platform ${{ matrix.platform }}
