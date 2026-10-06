@@ -1,5 +1,21 @@
 # Verification
 
+## Dependency updates
+
+Keep the maturin version in requirements-dev.txt aligned with the platform-wheel
+workflow. Python test-extra ranges must permit the pinned development versions;
+update a major-version constraint before its pin. Verify optional-extra
+resolution, both type checkers, real FastAPI/SQLite consumers and a fresh wheel.
+Update dependency PRs from main and require all nine CI jobs before approval
+and merge. Run the manual core-comparison workflow when its setup action changes.
+
+The 0.1.1 security patch passed all nine CI jobs in
+[run 37443068104](https://github.com/cloudthinker-ai/proofbound/actions/runs/37443068104).
+Its fresh PyPI install passed 48 tests; the permission-only case is skipped on
+Windows. See [security release evidence](audits/2026-10-06-security-release/README.md).
+
+## Earlier verification
+
 Proofbound became public and `gdp-rs==0.1.0` was published to PyPI on 2026-10-06.
 All five published package hashes match the tested release candidate manifest.
 The release candidate passed all nine CI jobs in
