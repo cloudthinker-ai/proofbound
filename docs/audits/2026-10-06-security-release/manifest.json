@@ -1,0 +1,72 @@
+{
+  "version": "0.1.1",
+  "candidate_commit": "289170fe6914118702a9c9671a7ae3e9bb981bf0",
+  "ci_run": 37443068104,
+  "ci_url": "https://github.com/cloudthinker-ai/proofbound/actions/runs/37443068104",
+  "jobs": [
+    {
+      "name": "contracts (3.11)",
+      "conclusion": "success"
+    },
+    {
+      "name": "advisory-audit",
+      "conclusion": "success"
+    },
+    {
+      "name": "wheels (macos-arm64)",
+      "conclusion": "success"
+    },
+    {
+      "name": "contracts (3.13)",
+      "conclusion": "success"
+    },
+    {
+      "name": "wheels (linux-x64)",
+      "conclusion": "success"
+    },
+    {
+      "name": "wheels (linux-arm64)",
+      "conclusion": "success"
+    },
+    {
+      "name": "contracts (3.12)",
+      "conclusion": "success"
+    },
+    {
+      "name": "contracts (3.14)",
+      "conclusion": "success"
+    },
+    {
+      "name": "wheels (windows-x64)",
+      "conclusion": "success"
+    }
+  ],
+  "license_sha256": "1e0d1af37e3e303acf576d3498b7c723b6cd7196c87157ddcd95d6aac8efb563",
+  "files": [
+    {
+      "filename": "gdp_rs-0.1.1-cp311-abi3-macosx_11_0_arm64.whl",
+      "bytes": 234359,
+      "sha256": "5c0fb9fce717bcb3d5ab625956f4bbeb380ef89bfc1b16e93735544a093970cb"
+    },
+    {
+      "filename": "gdp_rs-0.1.1-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "bytes": 259966,
+      "sha256": "d57dd3985284f02df93fba405105cbd14742d302c63dabe0f7cc4d900423fec2"
+    },
+    {
+      "filename": "gdp_rs-0.1.1-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "bytes": 260056,
+      "sha256": "fa56966c167d299d95940c35bc90e59a6580cf48ef5d1118a4c86c850d574d93"
+    },
+    {
+      "filename": "gdp_rs-0.1.1-cp311-abi3-win_amd64.whl",
+      "bytes": 139975,
+      "sha256": "b2d2371ffd5d96291ad86a549d27c364f2c50ff3f12dcfab67ef7b96c0780a28"
+    },
+    {
+      "filename": "gdp_rs-0.1.1.tar.gz",
+      "bytes": 26460,
+      "sha256": "05d6e8f40310c2e81d18262bc863a3d9e5e42d1dbb078714bf78d8491aee2f5d"
+    }
+  ]
+}

@@ -42,5 +42,38 @@ through GitHub's authenticated API. Private reporting and Dependabot alerts
 were already enabled; scanning, push protection and automatic security updates
 were enabled for this patch.
 
-Release verification and final repository protection evidence are recorded
-below after the exact candidate and public artifacts have been verified.
+## Published verification
+
+Candidate `289170fe6914118702a9c9671a7ae3e9bb981bf0` passed all nine jobs in
+[CI run 37443068104](https://github.com/cloudthinker-ai/proofbound/actions/runs/37443068104).
+The four platform wheels passed their installed tests on CPython 3.11–3.14.
+POSIX platforms passed 48 tests; Windows passed 47 with the permission-dependent
+directory case skipped. Local make check, release packaging, installed wheels,
+type checkers, examples, cargo-audit and full-redaction secret scans passed.
+
+Published [gdp-rs 0.1.1](https://pypi.org/project/gdp-rs/0.1.1/) and
+[GitHub v0.1.1](https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.1).
+The tag points to the exact candidate. All five public PyPI files matched the
+SHA-256 values in [manifest.json](manifest.json). Original MIT license bytes
+remain identical in every artifact. The upload token entered only Infisical's
+child process and was neither persisted nor displayed.
+
+A fresh public PyPI install on CPython 3.14.7 used --no-cache and
+--only-binary=:all:. The installed package version and environment location
+were verified. All 48 tests passed with deprecation warnings as errors;
+SQLite authorized/wrong-project examples and the installed lint command passed.
+Publication receipts are [pypi-receipt.json](pypi-receipt.json) and
+[github-receipt.json](github-receipt.json).
+
+Final GitHub controls include secret scanning, push protection, automatic
+Dependabot security updates and weekly Cargo/Python/Actions update PRs. Main's
+protection requires one approval, stale-review dismissal, all nine CI contexts
+from GitHub Actions, up-to-date branches and resolved conversations; it applies
+to administrators and rejects force pushes and branch deletion. Push CI targets
+main; every PR still runs all checks, avoiding duplicate bot branch builds.
+The API verification receipt is attached to the public release as
+[security-controls.json](https://github.com/cloudthinker-ai/proofbound/releases/download/v0.1.1/security-controls.json).
+
+The two original findings and the related partial rebinding/subclass cases are
+fixed. Correct policy, revocation, mutable payloads, atomic check/write and
+hostile in-process reflection remain the documented application boundary.
