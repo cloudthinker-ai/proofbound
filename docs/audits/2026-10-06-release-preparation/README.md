@@ -1,5 +1,9 @@
 # Python release preparation
 
+This records preparation before publication. The subsequent public release and
+fresh PyPI installation are documented in the
+[publication record](../2026-10-06-publication/README.md).
+
 Candidate `2c9f2c25dcdecfd4e15eb65f3c81da16a9509247` prepares `gdp-rs==0.1.0` as an experimental
 release. The `gdp` import, Rust crate name and runtime code remain unchanged.
 The package includes alpha status, project links, an installation guide,

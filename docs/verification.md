@@ -1,5 +1,12 @@
 # Verification
 
+Proofbound became public and `gdp-rs==0.1.0` was published to PyPI on 2026-10-06.
+All five published package hashes match the tested release candidate manifest.
+The release candidate passed all nine CI jobs in
+[run 37437554808](https://github.com/cloudthinker-ai/proofbound/actions/runs/37437554808).
+See the [release notes](releases/0.1.0.md) and
+[publication evidence](audits/2026-10-06-publication/README.md).
+
 Python performance improvements were verified on 2026-10-06. Code revision
 `13664c4045689e1533ba669a41a88f569e6dbb8b` passed all nine CI jobs in
 [run 37413254647](https://github.com/cloudthinker-ai/proofbound/actions/runs/37413254647).
@@ -13,12 +20,13 @@ improvements and 2.39–2.50x async-batch improvements. Source lint improves
 medians/p95 improve in both runs. Every diagnostic sequence matches across
 8,616 backend application files. See [measurement methods and raw evidence](performance.md).
 These results cover Proofbound overhead; the backend has not adopted contracts
-and its endpoint performance was not measured. The repository and artifacts are private.
+and its endpoint performance was not measured. These checks ran while the repository
+and artifacts were private.
 
 Python adoption improvements were verified on 2026-10-06. Code revision
 `051d39b7af8a7f1118640445960e975a07455a47` passed all nine CI jobs
 in [run 37409461865](https://github.com/cloudthinker-ai/proofbound/actions/runs/37409461865).
-The repository and its wheel artifacts remain private.
+The repository and its wheel artifacts were private during that verification.
 
 | Check | Evidence |
 | --- | --- |

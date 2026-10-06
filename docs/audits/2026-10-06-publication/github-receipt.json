@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/cloudthinker-ai/proofbound",
+  "visibility": "public",
+  "release_url": "https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.0",
+  "tag": "v0.1.0",
+  "candidate_commit": "2c9f2c25dcdecfd4e15eb65f3c81da16a9509247",
+  "is_draft": false,
+  "is_prerelease": true,
+  "published_at": "2026-10-06T08:58:41Z",
+  "asset_digests": {
+    "gdp_rs-0.1.0-cp311-abi3-macosx_11_0_arm64.whl": "sha256:84826359bfb2ea4573bd207f5a33d32673fb8d879712981d44f7d2defde49ce8",
+    "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "sha256:0136118d23a399067fdf98f12d5a1d321c140c7635b666a2a913ed0b6073a689",
+    "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "sha256:d0855d1c0424c64d9c9db2e67bf20ac9b50b39b10b46f950c7f9f27bf798a3a5",
+    "gdp_rs-0.1.0-cp311-abi3-win_amd64.whl": "sha256:249a7f3f8e3649b5ae57d6ab9103b6aad82a9b80c5b9683a5c50e13ba0574e6e",
+    "gdp_rs-0.1.0.tar.gz": "sha256:6ccf3e770f0f81c12155409b9723b9b5355e1d62b81820c7eff05ab3108ee47d",
+    "SHA256SUMS": "sha256:9799be4b964ab6494fd31d60e1673cfc2a4ddb3c88df12b7a715d9f6e8b7c78a"
+  },
+  "manifest_parity": "PASS",
+  "private_vulnerability_reporting": true
+}

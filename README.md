@@ -18,18 +18,11 @@ policy engine, authentication, and entitlement checks still decide who may do wh
 
 ## Python
 
-Build locally with Rust 1.90+, CPython 3.11+, and uv:
+Install [gdp-rs 0.1.0 from PyPI](https://pypi.org/project/gdp-rs/0.1.0/) with
+CPython 3.11 or newer:
 
 ```bash
-make install
-.venv/bin/python examples/python/main.py
-```
-
-The first release is being prepared as `gdp-rs` version `0.1.0`. After it is
-published, install with:
-
-```bash
-uv pip install gdp-rs==0.1.0
+pip install gdp-rs==0.1.0
 ```
 
 The API is experimental. See [the release notes](docs/releases/0.1.0.md) and
@@ -42,7 +35,9 @@ uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/proofbound.git#s
 Source installs require Rust. `make wheel` builds an abi3 wheel for the current platform
 that installs without a Rust toolchain.
 
-CI also builds tested wheels for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
+The [GitHub release](https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.0)
+also contains the platform wheels and source archive. CI builds tested wheels
+for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
 (11+), and Windows x64. Download the artifact for your platform from a successful
 [Actions run](https://github.com/cloudthinker-ai/proofbound/actions), then install
 its wheel. For example, on Linux x64, using the run ID of the commit you want:
@@ -53,7 +48,7 @@ gh run download RUN_ID --repo cloudthinker-ai/proofbound \
 uv pip install wheels/*.whl
 ```
 
-Actions artifacts require access to the repository while it remains private. Each wheel uses CPython's
+Each wheel uses CPython's
 3.11 stable ABI; CI checks Python 3.11–3.14. Use source installation for platforms
 outside the wheel matrix.
 

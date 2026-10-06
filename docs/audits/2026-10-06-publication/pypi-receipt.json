@@ -1,0 +1,37 @@
+{
+  "project_url": "https://pypi.org/project/gdp-rs/",
+  "version": "0.1.0",
+  "files": [
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-macosx_11_0_arm64.whl",
+      "sha256": "84826359bfb2ea4573bd207f5a33d32673fb8d879712981d44f7d2defde49ce8",
+      "uploaded_at": "2026-10-06T08:55:01.884735Z",
+      "url": "https://files.pythonhosted.org/packages/be/a6/00d789ddb0e9bdae59817ec4cca0ff1baada0be4a0ded6eb7fac9d61a2a0/gdp_rs-0.1.0-cp311-abi3-macosx_11_0_arm64.whl"
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "0136118d23a399067fdf98f12d5a1d321c140c7635b666a2a913ed0b6073a689",
+      "uploaded_at": "2026-10-06T08:55:03.896646Z",
+      "url": "https://files.pythonhosted.org/packages/97/3f/ddbefe62542e79bef8425fe4ecc6fce653827fa8df2de089207a6aa899fc/gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl"
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "sha256": "d0855d1c0424c64d9c9db2e67bf20ac9b50b39b10b46f950c7f9f27bf798a3a5",
+      "uploaded_at": "2026-10-06T08:55:05.302978Z",
+      "url": "https://files.pythonhosted.org/packages/ea/a7/effd001f3b9e4cfd39fa6bcb707e3de5d353d3d9a55e1bf3f5a5d7cbfafe/gdp_rs-0.1.0-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    {
+      "filename": "gdp_rs-0.1.0-cp311-abi3-win_amd64.whl",
+      "sha256": "249a7f3f8e3649b5ae57d6ab9103b6aad82a9b80c5b9683a5c50e13ba0574e6e",
+      "uploaded_at": "2026-10-06T08:55:06.641364Z",
+      "url": "https://files.pythonhosted.org/packages/a1/a8/e660ca88205552e112ca09f1a32f6ba91ae01767310a6add83708cdca20d/gdp_rs-0.1.0-cp311-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "gdp_rs-0.1.0.tar.gz",
+      "sha256": "6ccf3e770f0f81c12155409b9723b9b5355e1d62b81820c7eff05ab3108ee47d",
+      "uploaded_at": "2026-10-06T08:55:07.735455Z",
+      "url": "https://files.pythonhosted.org/packages/14/ed/208ec577673a939c505377ab9b669f642603d729cd57ed444cb37e636e41/gdp_rs-0.1.0.tar.gz"
+    }
+  ],
+  "manifest_parity": "PASS"
+}
