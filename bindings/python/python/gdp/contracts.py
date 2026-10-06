@@ -91,12 +91,17 @@ def requires(**requirements: Requirement) -> Callable[[Callable[P, R]], Callable
 
     def decorate(function: Callable[P, R]) -> Callable[P, R]:
         target = function
-        while isinstance(target, partial):
+        while isinstance(target, partial) and type(target) is partial:
             target = target.func
         if not (isfunction(target) or ismethod(target)):
             raise TypeError(
                 "Proof contracts require Python functions, bound methods, "
                 "or their partials"
+            )
+        if isinstance(function, partial):
+            function = cast(
+                Callable[P, R],
+                partial(function.func, *function.args, **function.keywords),
             )
         if isgeneratorfunction(function) or isasyncgenfunction(function):
             raise TypeError("Proof contracts require ordinary or async functions")
