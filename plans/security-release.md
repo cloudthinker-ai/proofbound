@@ -6,6 +6,8 @@ The design gate is skipped: the two fixes use existing decorator and CLI paths.
 Reject callable instances and their partials at decoration time. Support Python
 functions, bound methods, and partials of those functions. Keep ordinary async
 verification at await time and reject generator functions before execution.
+Reject partial subclasses and snapshot built-in partial bindings so later
+keyword mutation cannot make the operation use an unchecked default subject.
 Report source-directory traversal failures as GDP000 and fail the lint command.
 
 Add real SQLite and filesystem permission regressions. Confirm they fail against

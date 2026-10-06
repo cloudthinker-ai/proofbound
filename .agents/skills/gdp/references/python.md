@@ -48,6 +48,9 @@ wrappers are supported, including ordinary async functions. Callable instances,
 generator functions, and async-generator functions are rejected at decoration.
 Use a bound `__call__` method explicitly if its instance must be protected;
 async methods are verified when awaited, before their bodies begin.
+Partials must be the built-in type, not subclasses. Their bound arguments are
+snapshotted at decoration so changing the original partial's keywords cannot
+make verification and execution use different arguments.
 
 Errors are `AuthorizationError` (a `PermissionError`) for rejected proofs or closed
 scopes, `TypeError` for invalid argument/object shapes, and `ValueError` for invalid
