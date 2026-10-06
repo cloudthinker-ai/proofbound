@@ -75,3 +75,8 @@ or Python application memory usage. Individual RSS samples remain in the JSON.
 syntax checks passed. A fresh wheel installation on CPython 3.14.7 passed all
 46 Python tests and the SQLite example. The dedicated benchmark completed
 successfully; no runtime implementation or dependency changed.
+
+Benchmark implementation commit `3d9a447` passed all nine hosted jobs in
+[CI run 37421610504](https://github.com/cloudthinker-ai/proofbound/actions/runs/37421610504),
+including Python 3.11–3.14, all four platform wheels and the dependency advisory
+audit. The benchmark run is separate from these correctness and packaging checks.
