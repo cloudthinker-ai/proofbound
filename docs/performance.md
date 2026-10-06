@@ -104,3 +104,7 @@ contain the A/A run, both A/B runs, per-case samples, and corpus fingerprint.
 Local `make check`, `make package-check`, the benchmark target and a fresh
 release-wheel installation passed. The installed wheel passed all 46 Python
 tests, the SQLite example, lint, and both static consumer checkers.
+Implementation commit `13664c4` also passed all nine hosted jobs in
+[CI run 37413254647](https://github.com/cloudthinker-ai/proofbound/actions/runs/37413254647),
+including Python 3.11–3.14, all 16 platform/version wheel combinations and the
+dependency advisory audit. No timing threshold is enforced on hosted runners.

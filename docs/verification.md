@@ -1,5 +1,20 @@
 # Verification
 
+Python performance improvements were verified on 2026-10-06. Code revision
+`13664c4045689e1533ba669a41a88f569e6dbb8b` passed all nine CI jobs in
+[run 37413254647](https://github.com/cloudthinker-ai/proofbound/actions/runs/37413254647).
+All 46 Python tests pass across Python 3.11–3.14, including fresh platform wheels
+on Linux x64/ARM64, macOS ARM64 and Windows x64. Distribution rebuilds, Rust
+checks, static Python consumers, FastAPI/SQLite, lint and the advisory audit pass.
+
+Two paired release comparisons confirm 3.23–5.06x synchronous protected-call CPU
+improvements and 2.39–2.50x async-batch improvements. Source lint improves
+1.35–1.50x; a scan with 1,000 excluded files improves about 35x. CPU and wall
+medians/p95 improve in both runs. Every diagnostic sequence matches across
+8,616 backend application files. See [measurement methods and raw evidence](performance.md).
+These results cover Proofbound overhead; the backend has not adopted contracts
+and its endpoint performance was not measured. The repository and artifacts are private.
+
 Python adoption improvements were verified on 2026-10-06. Code revision
 `051d39b7af8a7f1118640445960e975a07455a47` passed all nine CI jobs
 in [run 37409461865](https://github.com/cloudthinker-ai/proofbound/actions/runs/37409461865).
