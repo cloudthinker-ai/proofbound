@@ -134,7 +134,13 @@ def test_callable_instances_are_rejected_before_deferred_side_effects(db):
         def __call__(self, project, *, proof):
             db.execute("UPDATE project SET password='forbidden'")
 
+    class AsyncPartial(partial):
+        async def __call__(self, project, *, proof):
+            db.execute("UPDATE project SET password='forbidden'")
+
     decorator = requires(proof=Requirement(_admin.kind, ("project",)))
+    with pytest.raises(TypeError, match="Python functions"):
+        decorator(AsyncPartial(SyncOperation().__call__))
     for operation in (
         AsyncOperation(),
         GeneratorOperation(),
@@ -165,10 +171,15 @@ def test_callable_instances_are_rejected_before_deferred_side_effects(db):
     methods = Methods()
     protected_sync = decorator(partial(methods.sync))
     protected_async = decorator(partial(methods.async_method))
-    with names("p1") as (project,):
+    with names("p1", "p2") as (project, other):
         proof = _admin.prove(project)
         assert protected_sync(project, proof=proof) == 1
         assert asyncio.run(protected_async(project, proof=proof)) == 1
+        original = partial(methods.sync, project=project)
+        protected_default = decorator(original)
+        original.keywords["project"] = other
+        assert protected_default(proof=proof) == 1
+        assert passwords(db) == [("sync",), ("old",)]
         deferred = protected_async(project, proof=proof)
     with pytest.raises(AuthorizationError):
         asyncio.run(deferred)
