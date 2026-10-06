@@ -5,7 +5,7 @@ release. The `gdp` import, Rust crate name and runtime code remain unchanged.
 The package includes alpha status, project links, an installation guide,
 guarantee limits and upstream attribution. The original MIT license is preserved.
 
-[Private draft release](https://github.com/cloudthinker-ai/proofbound/releases/tag/untagged-a0869b162f609f85582f)
+[Private draft release v0.1.0](https://github.com/cloudthinker-ai/proofbound/releases)
 contains the four tested platform wheels, source archive and SHA256SUMS.
 The draft is not a public release; PyPI upload and repository visibility remain
 separate approval steps under AGENTS.md.
