@@ -25,7 +25,9 @@ before doing work.
 
 In Python, `@requires` preserves the wrapped callable's signature and verifies all
 requirements before calling it. An async function is checked when its coroutine is
-awaited, before its body begins. Generator and async-generator functions are refused
+awaited, before its body begins. Callable instances are rejected; Python functions,
+bound methods and their partials preserve their execution classification.
+Generator and async-generator functions are refused
 because their deferred execution would make a check at call time misleading.
 
 A check is a snapshot, not a lock. Closing a scope prevents subsequent admission;

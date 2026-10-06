@@ -2,23 +2,7 @@ name: Proof contracts
 
 on:
   push:
-    paths-ignore:
-      - "docs/**"
-      - "plans/**"
-      - "wiki/**"
-      - ".agents/**"
-      - "README.md"
-      - "AGENTS.md"
-      - "CLAUDE.md"
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "plans/**"
-      - "wiki/**"
-      - ".agents/**"
-      - "README.md"
-      - "AGENTS.md"
-      - "CLAUDE.md"
 
 permissions:
   contents: read
@@ -52,6 +36,7 @@ jobs:
           path: dist/*
 
   wheels:
+    name: wheels (${{ matrix.artifact }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

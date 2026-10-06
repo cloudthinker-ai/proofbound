@@ -18,14 +18,14 @@ policy engine, authentication, and entitlement checks still decide who may do wh
 
 ## Python
 
-Install [gdp-rs 0.1.0 from PyPI](https://pypi.org/project/gdp-rs/0.1.0/) with
+Install [gdp-rs 0.1.1 from PyPI](https://pypi.org/project/gdp-rs/0.1.1/) with
 CPython 3.11 or newer:
 
 ```bash
-pip install gdp-rs==0.1.0
+pip install gdp-rs==0.1.1
 ```
 
-The API is experimental. See [the release notes](docs/releases/0.1.0.md) and
+The API is experimental. See [the release notes](docs/releases/0.1.1.md) and
 [guarantees](docs/guarantees.md) before adopting it. Source installation is also available:
 
 ```bash
@@ -35,7 +35,7 @@ uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/proofbound.git#s
 Source installs require Rust. `make wheel` builds an abi3 wheel for the current platform
 that installs without a Rust toolchain.
 
-The [GitHub release](https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.0)
+The [GitHub release](https://github.com/cloudthinker-ai/proofbound/releases/tag/v0.1.1)
 also contains the platform wheels and source archive. CI builds tested wheels
 for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
 (11+), and Windows x64. Download the artifact for your platform from a successful

@@ -28,7 +28,7 @@ The Python adapter preserves scoped payload types for up to eight arguments and
 participates in cyclic garbage collection without mutating authority. Both mypy
 and Pyrefly check installed consumers. A FastAPI dependency shares names within a
 request; a protected use case verifies the proof before a database write, and
-request teardown expires those names. Private platform wheels install without a
+request teardown expires those names. Public platform wheels install without a
 Rust toolchain. See the [Python API](../docs/python.md) for boundaries and limits.
 
 Protected calls reuse a bounded cache of argument layouts without retaining
@@ -36,6 +36,10 @@ request values or authorization decisions. Each call verifies its own proof and
 live subjects. The linter preserves diagnostics while building parent maps on
 demand and pruning excluded dependency directories. Release-build comparisons
 and their scope are described in [performance measurement](../docs/performance.md).
+Decorated boundaries accept functions, bound methods and their partials; callable
+instances are rejected so deferred execution cannot be misclassified as synchronous.
+Source-directory traversal errors fail the lint command rather than silently
+passing an incomplete scan. See the [0.1.1 security patch](../docs/releases/0.1.1.md).
 
 The [Rust and gdp-ts comparison](../docs/core-performance.md) measures runtime
 overhead separately from TypeScript's compile-time guarantees. Reusing a phantom

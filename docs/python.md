@@ -4,7 +4,7 @@ The distribution is `gdp-rs`; the import package is `gdp`. CPython 3.11 or newer
 supported. Wheels use abi3 and are specific to operating system and architecture.
 
 CI builds and tests wheels for Linux x64 and ARM64 (glibc 2.17 or newer), macOS
-11+ ARM64, and Windows x64. Install `gdp-rs==0.1.0` from PyPI, or use the
+11+ ARM64, and Windows x64. Install `gdp-rs==0.1.1` from PyPI, or use the
 GitHub release wheels and tested Actions artifacts as described in the
 repository README. Installing a wheel does not require Rust.
 
@@ -59,7 +59,11 @@ variadic subject parameters are rejected when the function is decorated.
 Multiple requirements are AND. For an OR policy, let a trusted checker decide
 which branch grants access and mint one explicit policy fact, or branch into
 separately protected functions. Do not let callers choose whether a requirement
-is checked. Synchronous and async functions are supported; generators are not.
+is checked. Python functions, bound methods, and their `functools.partial`
+wrappers are supported, including ordinary async functions. Callable instances,
+generator functions, and async-generator functions are rejected at decoration.
+Use a bound `__call__` method explicitly if its instance must be protected;
+async methods are verified when awaited, before their bodies begin.
 
 Errors are `AuthorizationError` (a `PermissionError`) for rejected proofs or closed
 scopes, `TypeError` for invalid argument/object shapes, and `ValueError` for invalid
@@ -95,6 +99,8 @@ Likewise `.__wrapped__` and `inspect.unwrap` are reserved in linted application
 code, even for unrelated decorators. Keep intentional introspection outside the
 protected application roots.
 Choose explicit application roots instead of linting dependencies or the SDK itself.
+Unreadable source files and directory traversal failures produce GDP000 and a
+nonzero exit status. A partially scanned tree is never reported as successful.
 
 ## FastAPI request lifetime
 

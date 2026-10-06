@@ -9,7 +9,7 @@ Proofbound is an early project with an evolving API. The Python distribution is
 ## Install
 
 ```bash
-pip install gdp-rs==0.1.0
+pip install gdp-rs==0.1.1
 ```
 
 CPython 3.11–3.14 is tested. Release wheels support Linux x64/ARM64 (glibc 2.17+),

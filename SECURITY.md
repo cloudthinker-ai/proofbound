@@ -2,6 +2,8 @@
 
 Proofbound's 0.1 series is experimental. Security fixes target the latest 0.1
 release; upgrade before reporting a problem in an older version.
+Version 0.1.1 fixes deferred callable classification and incomplete directory
+scans. Consumers using 0.1.0 should upgrade; see the [release notes](docs/releases/0.1.1.md).
 
 Use GitHub's private vulnerability reporting:
 [Report a vulnerability](https://github.com/cloudthinker-ai/proofbound/security/advisories/new).

@@ -203,18 +203,30 @@ def _ignored(name: str) -> bool:
     )
 
 
-def _sources(path: Path) -> list[Path]:
+def _sources(path: Path) -> tuple[list[Path], list[Diagnostic]]:
     if not path.is_dir():
-        return [path]
+        return [path], []
     files: list[Path] = []
-    for directory, folders, entries in os.walk(path):
+    diagnostics: list[Diagnostic] = []
+
+    def unreadable(error: OSError) -> None:
+        diagnostics.append(
+            Diagnostic(
+                Path(error.filename) if error.filename else path,
+                1,
+                "GDP000",
+                "Cannot read Python source directory",
+            )
+        )
+
+    for directory, folders, entries in os.walk(path, onerror=unreadable):
         folders[:] = [folder for folder in folders if not _ignored(folder)]
         files.extend(
             Path(directory) / entry
             for entry in (*folders, *entries)
             if not _ignored(entry) and Path(entry).match("*.py")
         )
-    return sorted(files)
+    return sorted(files), diagnostics
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -227,19 +239,20 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{path}:1: GDP000 Input path does not exist", file=sys.stderr)
             failures += 1
             continue
-        for source in _sources(path):
+        sources, diagnostics = _sources(path)
+        for source in sources:
             try:
-                diagnostics = check_file(source)
+                diagnostics.extend(check_file(source))
             except OSError:
-                diagnostics = [
+                diagnostics.append(
                     Diagnostic(source, 1, "GDP000", "Cannot read Python source")
-                ]
-            for diagnostic in diagnostics:
-                print(
-                    f"{diagnostic.path}:{diagnostic.line}: "
-                    f"{diagnostic.code} {diagnostic.message}"
                 )
-            failures += len(diagnostics)
+        for diagnostic in diagnostics:
+            print(
+                f"{diagnostic.path}:{diagnostic.line}: "
+                f"{diagnostic.code} {diagnostic.message}"
+            )
+        failures += len(diagnostics)
     return 1 if failures else 0
 
 

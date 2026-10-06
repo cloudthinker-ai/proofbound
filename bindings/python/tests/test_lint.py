@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -162,3 +163,35 @@ def test_directory_scan_preserves_explicit_inputs_and_sorted_diagnostics(tmp_pat
     )
     assert result.returncode == 1
     assert "GDP007" in result.stdout
+
+
+@pytest.mark.skipif(
+    os.name != "posix" or not hasattr(os, "geteuid") or os.geteuid() == 0,
+    reason="Requires POSIX directory permissions and an unprivileged user",
+)
+def test_unreadable_directories_fail_the_lint_command(tmp_path):
+    child = tmp_path / "app"
+    child.mkdir()
+    (child / "handler.py").write_text("protected.__wrapped__()\n")
+    readable = subprocess.run(
+        [sys.executable, "-m", "gdp.lint", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert readable.returncode == 1
+    assert "GDP007" in readable.stdout
+    child.chmod(0)
+    try:
+        for target in (tmp_path, child):
+            result = subprocess.run(
+                [sys.executable, "-m", "gdp.lint", str(target)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            assert result.returncode == 1
+            assert "GDP000" in result.stdout + result.stderr
+            assert str(child) in result.stdout + result.stderr
+    finally:
+        child.chmod(0o700)

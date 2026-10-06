@@ -6,6 +6,7 @@ import pickle
 import sqlite3
 import weakref
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from inspect import signature
 
 import pytest
@@ -112,6 +113,66 @@ def test_real_protected_write_and_async_boundary(db):
             "admin",
             "plan",
         ]
+
+
+def test_callable_instances_are_rejected_before_deferred_side_effects(db):
+    class AsyncOperation:
+        async def __call__(self, project, *, proof):
+            db.execute("UPDATE project SET password='forbidden'")
+
+    class GeneratorOperation:
+        def __call__(self, project, *, proof):
+            db.execute("UPDATE project SET password='forbidden'")
+            yield project
+
+    class AsyncGeneratorOperation:
+        async def __call__(self, project, *, proof):
+            db.execute("UPDATE project SET password='forbidden'")
+            yield project
+
+    class SyncOperation:
+        def __call__(self, project, *, proof):
+            db.execute("UPDATE project SET password='forbidden'")
+
+    decorator = requires(proof=Requirement(_admin.kind, ("project",)))
+    for operation in (
+        AsyncOperation(),
+        GeneratorOperation(),
+        AsyncGeneratorOperation(),
+        SyncOperation(),
+    ):
+        for candidate in (operation, partial(operation)):
+            with pytest.raises(TypeError, match="Python functions"):
+                decorator(candidate)
+    for operation in (
+        GeneratorOperation().__call__,
+        AsyncGeneratorOperation().__call__,
+    ):
+        for candidate in (operation, partial(operation)):
+            with pytest.raises(TypeError, match="ordinary or async"):
+                decorator(candidate)
+    assert passwords(db) == [("old",), ("old",)]
+
+    class Methods:
+        def sync(self, project, *, proof):
+            return db.execute(
+                "UPDATE project SET password=? WHERE id=?", ("sync", project.value)
+            ).rowcount
+
+        async def async_method(self, project, *, proof):
+            return self.sync(project, proof=proof)
+
+    methods = Methods()
+    protected_sync = decorator(partial(methods.sync))
+    protected_async = decorator(partial(methods.async_method))
+    with names("p1") as (project,):
+        proof = _admin.prove(project)
+        assert protected_sync(project, proof=proof) == 1
+        assert asyncio.run(protected_async(project, proof=proof)) == 1
+        deferred = protected_async(project, proof=proof)
+    with pytest.raises(AuthorizationError):
+        asyncio.run(deferred)
+    assert passwords(db) == [("sync",), ("old",)]
 
 
 @pytest.mark.parametrize(

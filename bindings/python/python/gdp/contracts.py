@@ -1,11 +1,13 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import lru_cache, wraps
+from functools import lru_cache, partial, wraps
 from inspect import (
     Signature,
     isasyncgenfunction,
     iscoroutinefunction,
+    isfunction,
     isgeneratorfunction,
+    ismethod,
     signature,
 )
 from typing import Any, ParamSpec, TypeVar, cast
@@ -88,6 +90,14 @@ def requires(**requirements: Requirement) -> Callable[[Callable[P, R]], Callable
         raise ValueError("Declare at least one proof requirement")
 
     def decorate(function: Callable[P, R]) -> Callable[P, R]:
+        target = function
+        while isinstance(target, partial):
+            target = target.func
+        if not (isfunction(target) or ismethod(target)):
+            raise TypeError(
+                "Proof contracts require Python functions, bound methods, "
+                "or their partials"
+            )
         if isgeneratorfunction(function) or isasyncgenfunction(function):
             raise TypeError("Proof contracts require ordinary or async functions")
         contract = signature(function)

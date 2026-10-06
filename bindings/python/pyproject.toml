@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "gdp-rs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Rust-backed proof contracts for Python authorization boundaries"
 requires-python = ">=3.11"
 license = "MIT"

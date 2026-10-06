@@ -12,7 +12,7 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - Run `make check` and test an installed wheel before publishing.
 - Traverse every Python reference owned by frozen handles; never mutate their authority for GC.
 - Keep scoped payload types through eight arguments and check consumers with mypy and Pyrefly.
-- Cache call layouts only, never values or authority; keep the cache bounded and verify every call.
+- Cache call layouts only, never authority; verify every call, reject callable instances, and fail unreadable lint directories.
 - Measure performance with release builds and paired, output-checked benchmarks.
 - Write no code comments; explain guarantees and limits in `docs/`.
 ### NEVER
@@ -25,6 +25,6 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - `crates/gdp/` owns scoped typed names and language-independent opaque handles.
 - `bindings/python/` owns PyO3 classes, the Python API, lint command, and type declarations.
 - `examples/` exercises real permission checks and protected operations.
-- CI tests FastAPI request scopes and wheels for Linux x64/ARM64, macOS ARM64 and Windows x64.
+- CI tests every PR on Python 3.11–3.14 and Linux x64/ARM64, macOS ARM64 and Windows x64; main requires all nine jobs and review.
 - Benchmark scripts compare release packages and pinned upstream code; raw results live in `docs/audits/`.
 - Releases use tested platform artifacts; publication credentials enter only the upload process.
