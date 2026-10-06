@@ -20,6 +20,7 @@ python-check:
 	$(BIN)/ruff check --config bindings/python/pyproject.toml bindings/python/python bindings/python/tests examples/python scripts
 	$(BIN)/ruff format --check --config bindings/python/pyproject.toml bindings/python/python bindings/python/tests examples/python scripts
 	$(BIN)/python -m mypy bindings/python/python/gdp examples/python
+	$(BIN)/python -m pyrefly check --preset default --python-interpreter-path $(BIN)/python bindings/python/python/gdp examples/python
 	$(BIN)/python -m pytest bindings/python/tests -q
 	$(BIN)/gdp-lint examples/python
 

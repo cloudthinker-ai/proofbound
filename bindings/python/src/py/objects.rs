@@ -3,6 +3,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use gdp::runtime;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
+use pyo3::pyclass::{PyTraverseError, PyVisit};
 use pyo3::types::{PyTuple, PyType};
 
 use super::{authorization_error, contain_fault};
@@ -21,6 +22,10 @@ impl Named {
 
 #[pymethods]
 impl Named {
+    fn __traverse__(&self, visit: PyVisit<'_>) -> Result<(), PyTraverseError> {
+        visit.call(&self.value)
+    }
+
     #[getter]
     fn value(&self, py: Python<'_>) -> PyResult<Py<PyAny>> {
         self.inner.ensure_live().map_err(authorization_error)?;
@@ -61,6 +66,18 @@ impl Names {
 
 #[pymethods]
 impl Names {
+    fn __traverse__(&self, visit: PyVisit<'_>) -> Result<(), PyTraverseError> {
+        for value in &self.values {
+            visit.call(value)?;
+        }
+        Ok(())
+    }
+
+    #[classmethod]
+    fn __class_getitem__(cls: &Bound<'_, PyType>, item: &Bound<'_, PyAny>) -> PyResult<Py<PyAny>> {
+        generic_alias(cls, item)
+    }
+
     fn __enter__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
         contain_fault(|| {
             if self.entered.swap(true, Ordering::AcqRel) {
@@ -105,6 +122,10 @@ pub(super) struct Proof {
 
 #[pymethods]
 impl Proof {
+    fn __traverse__(&self, visit: PyVisit<'_>) -> Result<(), PyTraverseError> {
+        visit.call(&self.evidence)
+    }
+
     #[getter]
     fn kind(&self) -> &str {
         self.inner.kind()

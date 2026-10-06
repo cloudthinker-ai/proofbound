@@ -10,6 +10,8 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - Preserve upstream attribution; describe compile-time and runtime guarantees separately.
 - Keep the root and both packaged LICENSE files identical.
 - Run `make check` and test an installed wheel before publishing.
+- Traverse every Python reference owned by frozen handles; never mutate their authority for GC.
+- Keep scoped payload types through eight arguments and check consumers with mypy and Pyrefly.
 - Write no code comments; explain guarantees and limits in `docs/`.
 ### NEVER
 - Serialize authority, accept proof-shaped dictionaries, or export a trusted issuer from an example.
@@ -21,3 +23,4 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - `crates/gdp/` owns scoped typed names and language-independent opaque handles.
 - `bindings/python/` owns PyO3 classes, the Python API, lint command, and type declarations.
 - `examples/` exercises real permission checks and protected operations.
+- CI tests FastAPI request scopes and private wheels for Linux x64/ARM64, macOS ARM64 and Windows x64.

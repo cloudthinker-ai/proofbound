@@ -4,6 +4,21 @@ import zipfile
 from pathlib import Path
 
 
+def check_wheel(path: Path, expected: bytes) -> None:
+    with zipfile.ZipFile(path) as archive:
+        licenses = [item for item in archive.namelist() if item.endswith("/LICENSE")]
+        if not licenses or any(archive.read(item) != expected for item in licenses):
+            raise ValueError(f"Missing or incorrect license in {path.name}")
+        required = {
+            "gdp/py.typed",
+            "gdp/_gdp.pyi",
+            "gdp/__init__.py",
+            "gdp/contracts.py",
+        }
+        if not required.issubset(archive.namelist()):
+            raise ValueError("Missing Python typing or API contract")
+
+
 def check() -> None:
     root = Path(__file__).resolve().parents[1]
     version = tomllib.loads((root / "Cargo.toml").read_text())["workspace"]["package"][
@@ -27,17 +42,7 @@ def check() -> None:
     if not wheels:
         raise ValueError("Missing Python wheel")
     for path in wheels:
-        with zipfile.ZipFile(path) as archive:
-            licenses = [
-                item for item in archive.namelist() if item.endswith("/LICENSE")
-            ]
-            if not licenses or any(archive.read(item) != expected for item in licenses):
-                raise ValueError(f"Missing or incorrect license in {path.name}")
-            if (
-                "gdp/py.typed" not in archive.namelist()
-                or "gdp/_gdp.pyi" not in archive.namelist()
-            ):
-                raise ValueError("Missing Python typing contract")
+        check_wheel(path, expected)
     print("Rust and Python packages retain the license and typing contract")
 
 

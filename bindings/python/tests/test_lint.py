@@ -27,6 +27,13 @@ from gdp.lint import check_file
         ),
         ("from proofs.admin import _issuer\n", {"GDP006"}),
         ("from proofs.admin import *\n", {"GDP006"}),
+        ("protected.__wrapped__(project, proof=None)\n", {"GDP007"}),
+        ("bypass = protected.__wrapped__\n", {"GDP007"}),
+        (
+            "from inspect import unwrap as original\noriginal(protected)(project)\n",
+            {"GDP007"},
+        ),
+        ("import inspect as i\ni.unwrap(protected)\n", {"GDP007"}),
     ],
 )
 def test_lint_command_rejects_boundary_violations(tmp_path, source, expected):
@@ -65,6 +72,28 @@ def test_private_trusted_module_passes_and_exported_issuer_fails(tmp_path):
         assert "GDP006" in {item.code for item in check_file(module)}
     module.write_text("from gdp import define_proof\nissuer = define_proof('Admin')\n")
     assert {item.code for item in check_file(module)} == {"GDP002"}
+
+
+def test_relative_private_issuer_imports_are_rejected(tmp_path):
+    package = tmp_path / "app"
+    trusted = package / "proofs"
+    trusted.mkdir(parents=True)
+    for source in ("from .admin import _issuer\n", "from . import _issuer\n"):
+        module = trusted / "checks.py"
+        module.write_text(source)
+        assert {item.code for item in check_file(module)} == {"GDP006"}
+    nested = trusted / "nested"
+    nested.mkdir()
+    module = nested / "checks.py"
+    module.write_text("from ..admin import _issuer\n")
+    assert {item.code for item in check_file(module)} == {"GDP006"}
+    module = package / "handler.py"
+    module.write_text("from .proofs.admin import _issuer\n")
+    assert {item.code for item in check_file(module)} == {"GDP006"}
+    module.write_text("from .helpers import _helper\n")
+    assert check_file(module) == []
+    module.write_text("obj.unwrap(callback)\n")
+    assert check_file(module) == []
 
 
 def test_packaged_examples_pass_lint_and_bad_input_fails_closed():

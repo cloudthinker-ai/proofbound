@@ -31,15 +31,20 @@ class _Checker(ast.NodeVisitor):
             if isinstance(node, ast.ImportFrom) and node.module in ("gdp", "gdp._gdp"):
                 for alias in node.names:
                     self.aliases[alias.asname or alias.name] = f"gdp.{alias.name}"
-            elif isinstance(node, ast.ImportFrom) and node.module == "typing":
+            elif isinstance(node, ast.ImportFrom) and node.module in (
+                "typing",
+                "inspect",
+            ):
                 for alias in node.names:
-                    self.aliases[alias.asname or alias.name] = f"typing.{alias.name}"
+                    self.aliases[alias.asname or alias.name] = (
+                        f"{node.module}.{alias.name}"
+                    )
             elif isinstance(node, ast.Import):
                 for alias in node.names:
                     if alias.name in ("gdp", "gdp._gdp"):
                         self.aliases[alias.asname or "gdp"] = "gdp"
-                    elif alias.name == "typing":
-                        self.aliases[alias.asname or "typing"] = "typing"
+                    elif alias.name in ("typing", "inspect"):
+                        self.aliases[alias.asname or alias.name] = alias.name
             elif isinstance(node, (ast.Assign, ast.AnnAssign)):
                 value = node.value
                 if (
@@ -70,6 +75,8 @@ class _Checker(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         function = self._resolve(node.func)
+        if function == "inspect.unwrap":
+            self._report(node, "GDP007", "Do not unwrap protected callables")
         if function == "gdp.define_proof":
             if not self.trusted:
                 self._report(
@@ -123,6 +130,11 @@ class _Checker(ast.NodeVisitor):
                 )
         self.generic_visit(node)
 
+    def visit_Attribute(self, node: ast.Attribute) -> None:
+        if node.attr == "__wrapped__":
+            self._report(node, "GDP007", "Do not bypass protected callable wrappers")
+        self.generic_visit(node)
+
     def visit_Return(self, node: ast.Return) -> None:
         if isinstance(node.value, ast.Name) and node.value.id in self.issuers:
             self._report(node, "GDP006", "Return proofs or verifiers, never the issuer")
@@ -152,7 +164,13 @@ class _Checker(ast.NodeVisitor):
                     self._report(node, "GDP006", "Do not include an issuer in __all__")
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
-        if node.module and "proofs" in node.module.split("."):
+        module_parts = (node.module or "").split(".")
+        if node.level:
+            package = self.path.parent
+            for _ in range(node.level - 1):
+                package = package.parent
+            module_parts = [*package.parts, *module_parts]
+        if "proofs" in module_parts:
             for alias in node.names:
                 if alias.name.startswith("_") or alias.name == "*":
                     self._report(

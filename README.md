@@ -34,6 +34,21 @@ uv pip install 'gdp-rs @ git+https://github.com/cloudthinker-ai/proofbound.git#s
 Source installs require Rust. `make wheel` builds an abi3 wheel for the current platform
 that installs without a Rust toolchain. No package has been published to PyPI.
 
+Private CI also builds tested wheels for Linux x64/ARM64 (glibc 2.17+), macOS ARM64
+(11+), and Windows x64. Download the artifact for your platform from a successful
+[Actions run](https://github.com/cloudthinker-ai/proofbound/actions), then install
+its wheel. For example, on Linux x64, using the run ID of the commit you want:
+
+```bash
+gh run download RUN_ID --repo cloudthinker-ai/proofbound \
+  --name proofbound-wheel-linux-x64 --dir wheels
+uv pip install wheels/*.whl
+```
+
+The artifacts require access to the private repository. Each wheel uses CPython's
+3.11 stable ABI; CI checks Python 3.11–3.14. Use source installation for platforms
+outside the wheel matrix.
+
 Create the issuer inside a trusted module, keep it private, and export its verifier:
 
 ```python
@@ -80,13 +95,16 @@ entitlement; the [SQLite example](examples/python/main.py) demonstrates both.
 `AuthorizationError` subclasses `PermissionError`. Once the `with` block exits, its
 names and proofs cannot be used to authorize another operation. `name(value)` is the
 unscoped form for callers that deliberately manage lifetimes themselves.
+Scoped naming preserves the ordered payload types for up to eight arguments;
+names and evidence also support Python cyclic garbage collection.
 
 ```bash
 .venv/bin/gdp-lint examples/python
 ```
 
 `gdp-lint` checks accidental minting/export outside trusted `proofs/` modules,
-direct opaque constructors, and proof casts. See [the lint contract](docs/python.md).
+direct opaque constructors, proof casts, and explicit decorator bypasses.
+See [the lint contract](docs/python.md).
 
 ## Rust
 
@@ -147,8 +165,9 @@ make package-check
 Checks cover compiler rejection, real SQLite writes through sync and async functions,
 forged and wrong-subject proofs, expired scopes, cross-thread close, lint diagnostics,
 installed type hints, interface compatibility, and extension/stub agreement.
-CI exercises Python 3.11–3.14, builds the wheel and source distribution, and tests a
-fresh wheel installation.
+They also cover cyclic garbage collection, mypy and Pyrefly consumers, and a
+FastAPI request lifecycle with real SQLite writes. CI exercises Python 3.11–3.14,
+builds the source distribution and platform wheels, and tests fresh wheel installations.
 
 ## Attribution
 

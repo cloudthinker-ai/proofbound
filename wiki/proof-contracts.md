@@ -1,7 +1,7 @@
 ---
 type: concept
 description: Proofs bind a checked fact to the exact values a sensitive operation consumes.
-verified_at: 2026-10-05
+verified_at: 2026-10-06
 ---
 # Proof contracts
 
@@ -23,6 +23,13 @@ Rust can express fresh identity through invariant generative lifetimes. Dynamic
 languages preserve the relationship through opaque Rust handles and verification
 before side effects. Python is the first binding. Additional language adapters use
 the same core contract without rewriting policy or verification.
+
+The Python adapter preserves scoped payload types for up to eight arguments and
+participates in cyclic garbage collection without mutating authority. Both mypy
+and Pyrefly check installed consumers. A FastAPI dependency shares names within a
+request; a protected use case verifies the proof before a database write, and
+request teardown expires those names. Private platform wheels install without a
+Rust toolchain. See the [Python API](../docs/python.md) for boundaries and limits.
 
 ## What Breaks
 

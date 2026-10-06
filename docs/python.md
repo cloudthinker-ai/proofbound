@@ -3,6 +3,10 @@
 The distribution is `gdp-rs`; the import package is `gdp`. CPython 3.11 or newer is
 supported. Wheels use abi3 and are specific to operating system and architecture.
 
+CI builds and tests wheels for Linux x64 and ARM64 (glibc 2.17 or newer), macOS
+11+ ARM64, and Windows x64. Download a wheel from a successful private Actions run
+as described in the repository README. Installing a wheel does not require Rust.
+
 ## Naming
 
 `name(value) -> Named[T]` returns an unscoped, read-only wrapper with a fresh identity.
@@ -14,6 +18,17 @@ a tuple of named values. All scopes close on normal or exceptional `__exit__`.
 The same context cannot be entered twice. Use ordinary `with` inside an async
 function, and await protected operations before leaving the block. Passing names
 into a detached task that outlives the block causes later verification to fail.
+
+For zero through eight positional values, the type checker preserves each payload
+type and the exact tuple length. For example, `names(42, "project")` yields
+`tuple[Named[int], Named[str]]`, so an invalid method on the integer is rejected.
+More than eight values or a dynamically sized argument list uses
+`tuple[Named[Any], ...]`; the runtime still supports up to 64 subjects.
+
+Names, scopes, and proof evidence participate in Python's cyclic garbage
+collection. Their references are immutable and traversed without clearing or
+changing authority. Reachable handles remain usable; unreachable cycles can be
+reclaimed. This does not deep-freeze Python values or shorten a proof's lifetime.
 
 ## Defining and checking facts
 
@@ -55,6 +70,7 @@ The package ships `py.typed` and `_gdp.pyi`. A type checker can reject a missing
 or a `Proof[Plan]` passed to an argument requiring `Proof[Admin]`. It cannot assign
 a fresh compile-time type to every runtime ID; exact value relationships are
 checked by Rust at runtime.
+The installed typing contract is tested with both mypy and Pyrefly.
 
 `gdp-lint path...` recursively checks Python source and exits 1 on a diagnostic:
 
@@ -67,12 +83,30 @@ checked by Rust at runtime.
 | GDP004 | Do not construct opaque objects directly |
 | GDP005 | Do not cast into proof/authority types |
 | GDP006 | Do not export issuers or import private issuers |
+| GDP007 | Do not access `.__wrapped__` or call `inspect.unwrap` |
 
-The linter understands direct and aliased GDP imports. It is a syntactic guard,
+The linter understands direct and aliased GDP imports, relative imports from
+trusted packages, and direct or aliased `inspect.unwrap` calls. It is a syntactic guard,
 not whole-program analysis: dynamic imports, arbitrary alias chains, reflection,
-and decorator bypasses still require review. `.prove` is reserved for trusted
+and indirect decorator bypasses still require review. `.prove` is reserved for trusted
 modules in linted source; unrelated methods with that name can also be flagged.
+Likewise `.__wrapped__` and `inspect.unwrap` are reserved in linted application
+code, even for unrelated decorators. Keep intentional introspection outside the
+protected application roots.
 Choose explicit application roots instead of linting dependencies or the SDK itself.
+
+## FastAPI request lifetime
+
+Create scoped names in a yielding FastAPI dependency, and let FastAPI cache that
+dependency for the request so checkers and use cases receive the same identities.
+Keep `Proof` and `Named` in internal dependency/use-case arguments rather than in
+JSON request or response models. The HTTP boundary translates `AuthorizationError`
+to HTTP 403; the library does not choose an HTTP policy for the application.
+
+Use `@requires` on the sensitive use case and await it before the dependency
+closes. The integration test in `bindings/python/tests/proofs/test_fastapi.py`
+uses real HTTP requests, SQLite policy checks and writes, checks rejected proofs
+before writes, and verifies that request authority expires after the response.
 
 The extension is a required dependency. A missing or mismatched interface fails
 at import with an installation message; no permissive Python fallback is used.

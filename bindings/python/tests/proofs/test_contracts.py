@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import gc
 import pickle
 import sqlite3
+import weakref
 from concurrent.futures import ThreadPoolExecutor
 from inspect import signature
 
@@ -27,6 +29,10 @@ class Admin:
 
 
 class Entitled:
+    pass
+
+
+class CyclicValue:
     pass
 
 
@@ -208,6 +214,39 @@ def test_opaque_handles_cannot_be_forged_modified_or_serialized():
     with pytest.raises(AttributeError):
         proof.kind = "Plan"
     assert value.value == "private-user-value"
+
+
+@pytest.mark.parametrize("kind", ["named", "scoped_named", "evidence", "scope"])
+def test_python_reference_cycles_are_collectible(kind):
+    value = CyclicValue()
+    reference = weakref.ref(value)
+    if kind == "named":
+        handle = name(value)
+    elif kind == "scoped_named":
+        with names(value) as (handle,):
+            assert handle.value is value
+    elif kind == "evidence":
+        handle = _admin.prove(evidence=value)
+        assert handle.evidence is value
+    else:
+        handle = names(value)
+    value.handle = handle
+    gc.collect()
+    assert reference() is value
+    if kind == "named":
+        assert handle.value is value
+    elif kind == "evidence":
+        assert handle.evidence is value
+    elif kind == "scoped_named":
+        with pytest.raises(AuthorizationError):
+            _ = handle.value
+    else:
+        with handle as (subject,):
+            assert subject.value is value
+        del subject
+    del value, handle
+    gc.collect()
+    assert reference() is None
 
 
 def test_limits_parameter_validation_and_safe_errors():
