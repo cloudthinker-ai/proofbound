@@ -25,6 +25,6 @@ Rust proof contracts with language adapters; Python is the first adapter.
 - `crates/gdp/` owns scoped typed names and language-independent opaque handles.
 - `bindings/python/` owns PyO3 classes, the Python API, lint command, and type declarations.
 - `examples/` exercises real permission checks and protected operations.
-- CI tests every PR on Python 3.11–3.14 and Linux x64/ARM64, macOS ARM64 and Windows x64; main requires all nine jobs and review.
+- CI tests every PR on Python 3.11–3.14 and four platforms; main requires all nine jobs and review; keep dev and wheel-CI maturin pins aligned.
 - Benchmark scripts compare release packages and pinned upstream code; raw results live in `docs/audits/`.
 - Releases use tested platform artifacts; publication credentials enter only the upload process.
