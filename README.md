@@ -169,6 +169,24 @@ They also cover cyclic garbage collection, mypy and Pyrefly consumers, and a
 FastAPI request lifecycle with real SQLite writes. CI exercises Python 3.11–3.14,
 builds the source distribution and platform wheels, and tests fresh wheel installations.
 
+## Performance
+
+`@requires` caches argument layouts for up to 128 calling patterns per protected
+function. Every invocation still checks the actual issuer, ordered subjects, and
+active scopes; request values and authorization results are never cached.
+The linter builds parent maps only when needed and prunes excluded dependency
+directories before traversal.
+
+Run the Python benchmark against a release extension:
+
+```bash
+make bench BENCH_ARGS="--output /tmp/proofbound-bench.json"
+```
+
+The benchmark checks output parity, alternates baseline/current measurements, and
+reports CPU and wall time with raw samples. See [performance measurement](docs/performance.md)
+for baseline snapshots, repeated comparisons, and the limits of local measurements.
+
 ## Attribution
 
 Based on Guillermo Rauch's MIT-licensed [gdp-ts](https://github.com/rauchg/gdp-ts),

@@ -129,3 +129,36 @@ def test_explicit_source_under_hidden_ancestor_is_checked(tmp_path):
         )
         assert result.returncode == 1
         assert "GDP001" in result.stdout
+
+
+def test_directory_scan_preserves_explicit_inputs_and_sorted_diagnostics(tmp_path):
+    for folder in (".git", ".venv", "__pycache__", "node_modules", ".test-wheel"):
+        ignored = tmp_path / folder / "nested"
+        ignored.mkdir(parents=True)
+        (ignored / "bad.py").write_text("protected.__wrapped__()\n")
+    for relative in ("z.py", "app/a.py", ".app/b.py"):
+        source = tmp_path / relative
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text("protected.__wrapped__()\n")
+    (tmp_path / "package.py").mkdir()
+    result = subprocess.run(
+        [sys.executable, "-m", "gdp.lint", str(tmp_path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert result.stdout.splitlines() == [
+        f"{tmp_path / '.app/b.py'}:1: GDP007 Do not bypass protected callable wrappers",
+        f"{tmp_path / 'app/a.py'}:1: GDP007 Do not bypass protected callable wrappers",
+        f"{tmp_path / 'package.py'}:1: GDP000 Cannot read Python source",
+        f"{tmp_path / 'z.py'}:1: GDP007 Do not bypass protected callable wrappers",
+    ]
+    result = subprocess.run(
+        [sys.executable, "-m", "gdp.lint", str(tmp_path / ".venv/nested/bad.py")],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 1
+    assert "GDP007" in result.stdout

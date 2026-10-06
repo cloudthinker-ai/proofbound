@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import ast
+import os
 import sys
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 
 
@@ -22,11 +24,7 @@ class _Checker(ast.NodeVisitor):
         self.aliases: dict[str, str] = {}
         self.issuers: set[str] = set()
         self.diagnostics: list[Diagnostic] = []
-        self.parents = {
-            child: parent
-            for parent in ast.walk(tree)
-            for child in ast.iter_child_nodes(parent)
-        }
+        self.tree = tree
         for node in ast.walk(tree):
             if isinstance(node, ast.ImportFrom) and node.module in ("gdp", "gdp._gdp"):
                 for alias in node.names:
@@ -57,6 +55,14 @@ class _Checker(ast.NodeVisitor):
                     for target in targets:
                         if isinstance(target, ast.Name):
                             self.issuers.add(target.id)
+
+    @cached_property
+    def parents(self) -> dict[ast.AST, ast.AST]:
+        return {
+            child: parent
+            for parent in ast.walk(self.tree)
+            for child in ast.iter_child_nodes(parent)
+        }
 
     def _resolve(self, node: ast.expr) -> str:
         if isinstance(node, ast.Name):
@@ -191,6 +197,26 @@ def check_file(path: Path) -> list[Diagnostic]:
     return sorted(checker.diagnostics, key=lambda item: (item.line, item.code))
 
 
+def _ignored(name: str) -> bool:
+    return name in (".git", ".venv", "__pycache__", "node_modules") or name.startswith(
+        ".test-"
+    )
+
+
+def _sources(path: Path) -> list[Path]:
+    if not path.is_dir():
+        return [path]
+    files: list[Path] = []
+    for directory, folders, entries in os.walk(path):
+        folders[:] = [folder for folder in folders if not _ignored(folder)]
+        files.extend(
+            Path(directory) / entry
+            for entry in (*folders, *entries)
+            if not _ignored(entry) and Path(entry).match("*.py")
+        )
+    return sorted(files)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Check GDP trusted-module boundaries")
     parser.add_argument("paths", nargs="+", type=Path)
@@ -201,14 +227,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{path}:1: GDP000 Input path does not exist", file=sys.stderr)
             failures += 1
             continue
-        files = sorted(path.rglob("*.py")) if path.is_dir() else [path]
-        for source in files:
-            if path.is_dir() and any(
-                part in (".git", ".venv", "__pycache__", "node_modules")
-                or part.startswith(".test-")
-                for part in source.relative_to(path).parts
-            ):
-                continue
+        for source in _sources(path):
             try:
                 diagnostics = check_file(source)
             except OSError:

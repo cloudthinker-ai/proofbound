@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import wraps
+from functools import lru_cache, wraps
 from inspect import (
     Signature,
     isasyncgenfunction,
@@ -14,6 +14,7 @@ from ._gdp import AuthorizationError, Named, Proof, ProofKind
 
 P = ParamSpec("P")
 R = TypeVar("R")
+_Reader = Callable[[tuple[object, ...], dict[str, object]], object]
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,22 +23,64 @@ class Requirement:
     subjects: tuple[str, ...]
 
 
-def _verify(
+def _compile_verifier(
     contract: Signature,
     requirements: dict[str, Requirement],
-    args: tuple[object, ...],
-    kwargs: dict[str, object],
-) -> None:
-    bound = contract.bind(*args, **kwargs)
-    bound.apply_defaults()
-    for parameter, requirement in requirements.items():
-        proof = bound.arguments[parameter]
-        subjects = [bound.arguments[subject] for subject in requirement.subjects]
-        if not isinstance(proof, Proof) or any(
-            not isinstance(subject, Named) for subject in subjects
-        ):
-            raise AuthorizationError("A real proof and named arguments are required")
-        requirement.kind.require(proof, *subjects)
+) -> Callable[[tuple[object, ...], dict[str, object]], None]:
+    positional = (
+        name
+        for name, parameter in contract.parameters.items()
+        if parameter.kind
+        in (parameter.POSITIONAL_ONLY, parameter.POSITIONAL_OR_KEYWORD)
+    )
+    positions = {name: index for index, name in enumerate(positional)}
+
+    @lru_cache(maxsize=128)
+    def plan(
+        count: int, keywords: tuple[str, ...]
+    ) -> tuple[tuple[ProofKind[Any], _Reader, tuple[_Reader, ...]], ...]:
+        contract.bind(*([None] * count), **dict.fromkeys(keywords))
+
+        def reader(name: str) -> _Reader:
+            if name in positions and positions[name] < count:
+                index = positions[name]
+                return lambda args, kwargs: args[index]
+            if (
+                name in keywords
+                and contract.parameters[name].kind
+                != contract.parameters[name].POSITIONAL_ONLY
+            ):
+                return lambda args, kwargs: kwargs[name]
+            default = contract.parameters[name].default
+            return lambda args, kwargs: default
+
+        return tuple(
+            (
+                requirement.kind,
+                reader(parameter),
+                tuple(reader(subject) for subject in requirement.subjects),
+            )
+            for parameter, requirement in requirements.items()
+        )
+
+    def verify(args: tuple[object, ...], kwargs: dict[str, object]) -> None:
+        for kind, proof_reader, subject_readers in plan(len(args), tuple(kwargs)):
+            proof = proof_reader(args, kwargs)
+            if not isinstance(proof, Proof):
+                raise AuthorizationError(
+                    "A real proof and named arguments are required"
+                )
+            subjects = []
+            for reader in subject_readers:
+                subject = reader(args, kwargs)
+                if not isinstance(subject, Named):
+                    raise AuthorizationError(
+                        "A real proof and named arguments are required"
+                    )
+                subjects.append(subject)
+            kind.require(proof, *subjects)
+
+    return verify
 
 
 def requires(**requirements: Requirement) -> Callable[[Callable[P, R]], Callable[P, R]]:
@@ -66,18 +109,20 @@ def requires(**requirements: Requirement) -> Callable[[Callable[P, R]], Callable
                 ):
                     raise ValueError("Proof requirements must name explicit parameters")
 
+        verify = _compile_verifier(contract, requirements)
+
         if iscoroutinefunction(function):
 
             @wraps(function)
             async def async_checked(*args: P.args, **kwargs: P.kwargs) -> Any:
-                _verify(contract, requirements, args, kwargs)
+                verify(args, kwargs)
                 return await function(*args, **kwargs)
 
             return cast(Callable[P, R], async_checked)
 
         @wraps(function)
         def checked(*args: P.args, **kwargs: P.kwargs) -> R:
-            _verify(contract, requirements, args, kwargs)
+            verify(args, kwargs)
             return function(*args, **kwargs)
 
         return checked

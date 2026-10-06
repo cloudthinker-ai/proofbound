@@ -2,12 +2,16 @@ PYTHON ?= python3
 VENV := .venv
 BIN := $(VENV)/bin
 
-.PHONY: install check rust-check python-check wheel sdist package-check examples audit
+.PHONY: install check rust-check python-check wheel sdist package-check examples audit bench
 
 install:
 	@test -x $(BIN)/python || uv venv --python $(PYTHON) $(VENV)
 	uv pip install --python $(BIN)/python -r requirements-dev.txt
 	VIRTUAL_ENV="$(CURDIR)/$(VENV)" PATH="$(CURDIR)/$(BIN):$$PATH" $(BIN)/maturin develop --locked --manifest-path bindings/python/Cargo.toml
+
+bench:
+	VIRTUAL_ENV="$(CURDIR)/$(VENV)" PATH="$(CURDIR)/$(BIN):$$PATH" $(BIN)/maturin develop --release --locked --manifest-path bindings/python/Cargo.toml
+	$(BIN)/python scripts/bench_python.py $(BENCH_ARGS)
 
 check: rust-check python-check examples
 

@@ -195,6 +195,94 @@ def test_scope_exit_including_exception_and_cross_thread_close(db):
     assert passwords(db) == [("old",), ("old",)]
 
 
+def test_call_layouts_always_check_current_authority_and_release_request_values(db):
+    with names("alice", "p1", "p2") as (user, project, other):
+        admin = _admin.prove(user, project)
+        plan = _plan.prove(project)
+
+        @requires(
+            admin=Requirement(_admin.kind, ("user", "project")),
+            plan=Requirement(_plan.kind, ("project",)),
+        )
+        def flexible(
+            connection=db,
+            user=user,
+            /,
+            project=project,
+            *extra,
+            admin=admin,
+            plan=plan,
+            password="changed",
+            **options,
+        ):
+            return connection.execute(
+                "UPDATE project SET password=? WHERE id=?", (password, project.value)
+            ).rowcount
+
+        calls = [
+            ((), {}),
+            ((db, user), {"project": project, "admin": admin, "plan": plan}),
+            ((db, user, project, "extra"), {"plan": plan, "admin": admin}),
+            ((db, user), {"user": other, "project": project, "admin": admin}),
+        ]
+        for args, kwargs in calls:
+            assert flexible(*args, **kwargs) == 1
+        assert passwords(db) == [("changed",), ("old",)]
+        for index in range(140):
+            assert flexible(db, user, project, **{f"option_{index}": index}) == 1
+        for proof in (None, {"kind": "Admin"}, _impostor.prove(user, project)):
+            with pytest.raises(AuthorizationError):
+                flexible(db, user, project, admin=proof, password="forbidden")
+        with pytest.raises(AuthorizationError):
+            flexible(db, user, other, admin=admin, password="forbidden")
+        assert passwords(db) == [("changed",), ("old",)]
+        with pytest.raises(TypeError):
+            flexible(db, user, project, project=project)
+        for args, kwargs in (
+            ((db, user, project), {"admin": admin, "plan": plan}),
+            ((db, user, project, "bad", "extra"), {"admin": admin, "plan": plan}),
+            (
+                (db, user, project, "bad"),
+                {"password": "duplicate", "admin": admin, "plan": plan},
+            ),
+            (
+                (db, user, project, "bad"),
+                {"unexpected": "bad", "admin": admin, "plan": plan},
+            ),
+        ):
+            with pytest.raises(TypeError) as expected:
+                signature(write).bind(*args, **kwargs)
+            with pytest.raises(TypeError) as failure:
+                write(*args, **kwargs)
+            assert str(failure.value) == str(expected.value)
+        assert passwords(db) == [("changed",), ("old",)]
+    with pytest.raises(AuthorizationError):
+        flexible()
+    assert passwords(db) == [("changed",), ("old",)]
+
+    value = CyclicValue()
+    reference = weakref.ref(value)
+    with names(value, "p1") as (temporary_user, temporary_project):
+        temporary_admin = _admin.prove(
+            temporary_user, temporary_project, evidence=value
+        )
+        temporary_plan = _plan.prove(temporary_project)
+        assert (
+            write(
+                db,
+                temporary_user,
+                temporary_project,
+                "released",
+                admin=temporary_admin,
+                plan=temporary_plan,
+            )
+            == 1
+        )
+    del value, temporary_user, temporary_project, temporary_admin, temporary_plan
+    gc.collect()
+    assert reference() is None
+
+
 def test_opaque_handles_cannot_be_forged_modified_or_serialized():
     value = name("private-user-value")
     proof = _admin.prove(value)

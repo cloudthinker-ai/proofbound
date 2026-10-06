@@ -31,6 +31,12 @@ request; a protected use case verifies the proof before a database write, and
 request teardown expires those names. Private platform wheels install without a
 Rust toolchain. See the [Python API](../docs/python.md) for boundaries and limits.
 
+Protected calls reuse a bounded cache of argument layouts without retaining
+request values or authorization decisions. Each call verifies its own proof and
+live subjects. The linter preserves diagnostics while building parent maps on
+demand and pruning excluded dependency directories. Release-build comparisons
+and their scope are described in [performance measurement](../docs/performance.md).
+
 ## What Breaks
 
 A faulty trusted checker can issue a faulty proof. A stale fact can outlive a

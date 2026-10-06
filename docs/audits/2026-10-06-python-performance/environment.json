@@ -1,0 +1,16 @@
+{
+  "baseline_revision": "95aaa9f7a5b28658c5aaed50aaaf1d86fcf09086",
+  "build_profile": "release, opt-level=3, lto=true, codegen-units=1",
+  "extension_sha256": "11ba2d23c6631daefdb0d4c994065300ba756f60f6cfda84d8123f63e31c5f40",
+  "extension_identical_in_both_variants": true,
+  "candidate_source_sha256": {
+    "bindings/python/python/gdp/contracts.py": "8ae045dded7298e279648bfeb2b86af5aed010effb39e671e275d51311fb6bfe",
+    "bindings/python/python/gdp/lint.py": "021475fcfb4dd9388c9f080b9a3599f07a496a6c9d0db252b6a8b296e06bef7c"
+  },
+  "backend_corpus_revision": "f87f234fcb6f3984835362c684566e25293b7e50",
+  "comparison_command": ".venv/bin/python scripts/bench_python.py --baseline /tmp/proofbound-perf/baseline/gdp --iterations 50000",
+  "cpu_affinity": [
+    17
+  ],
+  "correctness": "All paired case outputs match. All 8616 corpus-file diagnostic sequences match."
+}

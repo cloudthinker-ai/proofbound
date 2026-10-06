@@ -1,0 +1,14 @@
+{
+  "source_root": "/home/duc.bui/lanes/ct-2/backend/app",
+  "files": 8616,
+  "diagnostics": {
+    "GDP007": 8
+  },
+  "parity": "PASS",
+  "output_digest_sha256": "1ab2ab9c2aa6f712864695780f140bf2abfe5004b3781ec557b4d55f46808b9c",
+  "cpu_s": {
+    "baseline": 48.629213605,
+    "current": 35.39241654
+  },
+  "timing_scope": "per-file checks, alternating order; excludes directory discovery"
+}
