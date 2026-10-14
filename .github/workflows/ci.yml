@@ -31,7 +31,7 @@ jobs:
           .test-venv/bin/python -m pytest bindings/python/tests -q
           .test-venv/bin/python examples/python/main.py
           .test-venv/bin/gdp-lint examples/python
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: gdp-python-${{ matrix.python }}
           path: dist/*
@@ -80,7 +80,7 @@ jobs:
       - run: uv run --no-project --python 3.12 python scripts/test_wheel.py --platform ${{ matrix.platform }}
       - run: uv run --no-project --python 3.13 python scripts/test_wheel.py --platform ${{ matrix.platform }}
       - run: uv run --no-project --python 3.14 python scripts/test_wheel.py --platform ${{ matrix.platform }}
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: proofbound-wheel-${{ matrix.artifact }}
           path: dist/*.whl
