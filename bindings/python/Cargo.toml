@@ -17,4 +17,4 @@ workspace = true
 
 [dependencies]
 gdp = { path = "../../crates/gdp" }
-pyo3 = { version = "0.29", features = ["abi3-py311", "extension-module"] }
+pyo3 = { version = "0.30", features = ["abi3-py311", "extension-module"] }
